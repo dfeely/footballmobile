@@ -1,0 +1,85 @@
+import React from "react";
+import { useNavigation } from "@react-navigation/native";
+import { View, Image, Text } from "react-native";
+import { images } from '../assets/images';
+
+import { COLORS, SIZES, SHADOWS, assets } from "../constants";
+import { SubInfo, EthPrice, NFTTitle, Scoreboard, DateTitle } from "./SubInfo";
+import { RectButton, HomeImage , AwayImage} from "./Button";
+
+const GameCard = ({ data }) => {
+  const navigation = useNavigation();
+  let team = data.HomeTeam.replace(/ /g, '').replace('/', '').replace('u0027','').toUpperCase();
+
+  console.log(team);
+  //team = "DRUMCONDRAAFC";
+	let logoHome = images[team]["uri"];
+  team = data.AwayTeam.replace(/ /g, '').replace('/', '').replace('u0027','').toUpperCase();
+  //team = "DRUMCONDRAAFC";
+	let logoAway = images[team]["uri"];
+
+  return (
+      <View
+      style={{
+        backgroundColor: COLORS.white,
+        borderRadius: SIZES.font,
+        marginBottom: SIZES.extraLarge,
+        margin: SIZES.base,
+        ...SHADOWS.dark,
+      }}
+    >
+      <View
+        style={{
+          width: "100%",
+          height: 120,
+        }}
+      >
+       
+        <AwayImage imgUrl={logoAway.toString().toLowerCase()} right={10} top={10} />
+      
+        <HomeImage imgUrl={logoHome.toString().toLowerCase()} left={10} top={10} />
+        
+        <View style={{position: "absolute", top: 0, left: 0, right: 0, bottom: 0, justifyContent: 'center', alignItems: 'center'}}>  
+        <DateTitle style={{padding:10}}
+          title={data.Venue}
+          subTitle={data.GameDate}
+          titleSize={SIZES.medium}
+          subTitleSize={SIZES.small}
+        />        
+          <Scoreboard Homescore={data.HomeScore} Awayscore={data.AwayScore} Played={data.Played}/>
+        </View>
+      </View>
+      <View style={{ width: "100%", padding: SIZES.font , alignItems: "center",   justifyContent: "space-between"}}>
+        <NFTTitle
+                   title={data.HomeTeam}
+          subTitle={data.AwayTeam}
+          titleSize={SIZES.medium}
+          subTitleSize={SIZES.medium}
+        />
+        <View
+          style={{
+            marginTop: SIZES.font,
+            flexDirection: "row",
+            justifyContent: "space-between",
+            alignItems: "center",
+          }}
+        >          
+          <RectButton
+            minWidth={120}
+            fontSize={SIZES.font}  
+            handlePress={() =>  
+            navigation.navigate('Settings', {
+              screen: 'Details',
+              params: { data },
+            })}
+            caption="View Details"
+          />
+
+  
+        </View>
+      </View>
+    </View>
+  );
+};
+
+export default GameCard;
