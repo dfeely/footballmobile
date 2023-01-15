@@ -18,7 +18,7 @@ import { useFocusEffect } from "@react-navigation/native";
 class TableBody extends Component  {
 		 
   state = {
-    table: [],fuckthis: "start value"
+    table: [],okthis: "start value"
   }; 
   
   constructor(props)
@@ -87,7 +87,15 @@ class TableBody extends Component  {
 
 						let team = item.TeamName.replace(/ /g, '').replace('/', '').replace('u0027','').toUpperCase();
 						//console.log(team);
-						let logo = images[team]["uri"];
+						let logo = ""
+						try
+						{
+						logo=images[team]["uri"];
+						}
+						catch
+						{//MISSING
+							logo = images["MISSING"]["uri"];  
+						}
 						
 						return (
 							<StyledView style={{backgroundColor: '#fff', padding: 10, borderRadius: 5}}>								 

@@ -6,17 +6,30 @@ import { COLORS, FONTS, SIZES, assets } from "../constants";
 import { RectButton} from "./Button";
 import styled from 'styled-components/native';
 import { useNavigation } from "@react-navigation/native";
-
-const image = { uri: "https://reactjs.org/logo-og.png" };
+import { images } from '../assets/images';
 
 const HomeHeader = ({ onSearch, title, subTitle }) => {  
+  
+  let logo = "";
+  let team = "";
 
   if (title ==null)
   {
     
     title = "not selected, go to settings";
     subTitle = "not selected, go to settings";
+    logo = images["MISSING"]["uri"];
   }
+  else
+  {
+    try{
+    team = title.replace(/ /g, '').toUpperCase();
+    logo = images[team]["uri"];
+    }
+    catch {}
+  }
+   
+
   return (
     <View
       style={{
@@ -40,7 +53,7 @@ const HomeHeader = ({ onSearch, title, subTitle }) => {
 
         <View style={{ width: 60, height: 60 }}>
           <Image
-            source={assets.club01}
+            source={logo}
             resizeMode="contain"
             style={{ width: "100%", height: "100%" ,
             borderColor: 'white',
@@ -72,7 +85,7 @@ const HomeHeader = ({ onSearch, title, subTitle }) => {
             color: COLORS.white,
           }}
         >
-         Your club is  {title}
+         Your selected club is  {title}
         </Text>
 
         <Text

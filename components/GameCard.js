@@ -10,14 +10,29 @@ import { RectButton, HomeImage , AwayImage} from "./Button";
 const GameCard = ({ data }) => {
   const navigation = useNavigation();
   let team = data.HomeTeam.replace(/ /g, '').replace('/', '').replace('u0027','').toUpperCase();
+  let logoHome = "";
+  let logoAway = "";
 
-  console.log(team);
+  //console.log(team);
+  try{
   //team = "DRUMCONDRAAFC";
-	let logoHome = images[team]["uri"];
-  team = data.AwayTeam.replace(/ /g, '').replace('/', '').replace('u0027','').toUpperCase();
-  //team = "DRUMCONDRAAFC";
-	let logoAway = images[team]["uri"];
+	  logoHome = images[team]["uri"];
+  }
+  catch
+  {
+    logoHome = images["MISSING"]["uri"];  
+    console.log("Error setting home team logo");
+  }
 
+  try{
+    team = data.AwayTeam.replace(/ /g, '').replace('/', '').replace('u0027','').toUpperCase();
+    logoAway = images[team]["uri"];
+  }
+  catch
+  {
+    logoAway = images["MISSING"]["uri"];  
+    console.log("Error setting away team logo");
+  }
   return (
       <View
       style={{

@@ -11,45 +11,47 @@ const Home = ({ data }) => {
   const [gameData, setGameData] = useState([]);
   const [leagueName, setLeagueName] = useState([]);
   const [clubName, setClubName] = useState([]);
+  const [clubId, setClubId] = useState([]);
   const [divisionName, setDivisionName] = useState("");
   const [division, setDivision] = useState("");
   const [divisionid, setDivisionid] = useState("");
   const [teamid, setTeamId] = useState("");
   
   
-  useFocusEffect(
-
-    
+  useFocusEffect(    
     React.useCallback(() => {
-      async function fetchData() {
+    async function fetchData() {
         // You can await here
-        console.log("focus event on the Home Page");
+    console.log("focus event on the Home Page");
     var value = await AsyncStorage.getItem("club");
     setClubName(value);
+    var valueClubId = await AsyncStorage.getItem("clubid");
+    setClubId(valueClubId);
     var value = await AsyncStorage.getItem("division");
     setDivisionName(value);
     //console.log("focus event on the value2" + value);
     var valueDivisionId = await AsyncStorage.getItem("divisionid");
-    setDivisionid(valueDivisionId);      
+    if(valueDivisionId==divisionid)
+    {
+      console.log("nothing to do");
+    }
+    else
+    {
+    setDivisionid(valueDivisionId);   
+    }   
     var valueTeam = await AsyncStorage.getItem("teamid");
     setTeamId(valueTeam);  
 
     global.ClubNameGlobal = clubName;
+    global.ClubId = clubId;
     global.DivisionNameGlobal = divisionName;
     global.DivisionId = divisionid;
     global.TeamId = valueTeam;
-    //if (divisionid==6959)
-    //{
-    //    global.TeamId = 75596;   
-    //}
-    //if (divisionid==6881)    
-    //{
-        //global.TeamId = 74441;   
-    //}
-      //getAdvice(75596,6959); //Conor
-      //getAdvice(74441,6881); //teamId=74441&divisionId=6881 James
+     
+      console.log("global clubid" + valueClubId);
       console.log("global team" + valueTeam);
       console.log("global division" + valueDivisionId);
+      
         getAdvice(valueTeam,valueDivisionId);
        }
   
@@ -66,6 +68,7 @@ const Home = ({ data }) => {
           }
         })
         .then((response) => {
+        
           console.log("getadvice team" + team);
           console.log("getadvice division" + division);
           setGameData(response.data);

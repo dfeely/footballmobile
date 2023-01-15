@@ -19,7 +19,7 @@
     "expo": "^47.0.3",
     "expo-cli": "^6.0.8",
     "expo-font": "~11.0.1",
-    "expo-updates": "^0.15.4",
+    "expo-updates": "~0.15.6",
     "react": "18.1.0",
     "react-dom": "18.1.0",
     "react-native": "^0.70.5",

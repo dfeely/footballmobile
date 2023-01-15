@@ -23,6 +23,7 @@ function Root() {
     <Stack.Navigator  screenOptions={{
       headerShown: false
     }}>
+      
       <Stack.Screen name="PickClub" component={PickClub} />
       <Stack.Screen name={tableName} component={Details}  />
     </Stack.Navigator>

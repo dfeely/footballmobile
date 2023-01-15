@@ -20,7 +20,9 @@
       "supportsTablet": true,
       "config": {
         "googleMapsApiKey": "AIzaSyBsQ65Nch7KtSSASv5nG8_Aa0qXc7N6aGI"
-      }
+      },
+      "bundleIdentifier": "com.feelyd.gameon",
+      "buildNumber": "5"
     },
     "android": {
       "adaptiveIcon": {

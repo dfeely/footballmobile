@@ -92,8 +92,8 @@ const images = {
 	LUCANUTD: {
 		uri: require('./images/lucanutd.jpg')
 	},
-	LUCANUTDDIRECTIONS: {
-		uri: require('./images/lucanutddirections.jpg')
+	GOOGLEDIRECTIONS: {
+		uri: require('./images/googledirections.jpg')
 	},
 	CASTLEKNOCKCELTIC: {
 		uri: require('./images/castleknockceltic.jpg')
@@ -133,6 +133,9 @@ const images = {
 	},
 	SHANKILLFC: {
 		uri: require('./images/shankillfc.jpg')
+	},
+	MISSING: {
+		uri: require('./images/missing.png')
 	},
 }
 

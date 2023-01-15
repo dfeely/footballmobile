@@ -26,9 +26,28 @@ const PickClub = ({ route, navigation }) => {
     const [teamId, setTeamId] = useState(null);
     const [isFocus, setIsFocus] = useState(false);
           
-
-      useEffect(() => {
+    useEffect(() => {
     
+      const fetchData = async () => {
+        
+        var value = AsyncStorage.getItem("league");
+        setLeagueName(value);
+        setLeague(1);
+        var valueClubId = await AsyncStorage.getItem("clubid");
+        setClub(parseInt(global.ClubId));
+        handleClub(value);
+        handleDivision(league, valueClubId);
+        setDivision(global.DivisionId);
+        setDivisionName(global.DivisionNameGlobal);
+        setClubName(global.ClubNameGlobal);
+        console.log("valueclubid" + global.ClubId);
+        console.log("valuedivisionid" + global.DivisionId);
+        console.log(value);
+
+      }
+    
+      // call the function
+      fetchData()
 
      var config = {
         method: 'get',
@@ -39,7 +58,7 @@ const PickClub = ({ route, navigation }) => {
    
       axios(config)
         .then(response => {
-          console.log(JSON.stringify(response.data));
+          //console.log(JSON.stringify(response.data));
           var count = Object.keys(response.data).length;
           let leagueArray = [];
           for (var i = 0; i < count; i++) {          
@@ -54,26 +73,27 @@ const PickClub = ({ route, navigation }) => {
           console.log(error);
         });  
 
-        var value = AsyncStorage.getItem("league");
-        setLeagueName(value);
-        setLeague(1);
-        var valueClubId = AsyncStorage.getItem("clubid");
-        setClub(10483);
-        handleClub(value);
-        handleDivision(league, 10483);
-        console.log("valueclubid" + club);
-        console.log(value);
+        
     }, []);
   
     const pleasework = () =>
     {
       if(clubName == null ||divisionName ==null )
       {
-        alert('please select a club and division')
-        return;      
+        // Names and null but ID's are populated , nothing changes, just go home 
+        //if(clubName == null ||divisionName ==null )
+        //{
+            //alert('No changes made');
+          //  navigation.navigate('Home', {'paramPropKey': 'paramPropValue'});
+           // return;
+        //}
+        //else
+        //{
+            alert('please select a club and division' + clubName)
+            return;      
+        //}
       }
       getTeam(division,clubName);
-
       AsyncStorage.setItem("divisionid",division.toString());
       AsyncStorage.setItem("division",divisionName.toString());
       AsyncStorage.setItem("club",clubName.toString());
@@ -85,7 +105,7 @@ const PickClub = ({ route, navigation }) => {
       global.DivisionId = division;
       global.TeamId = teamId;
       //getTeam(division,clubName); //https://footballresults.azurewebsites.net/api/teams?code=C8p51ZsFglFA9VN_08-mj-rliyr1f3CRny4gvBBxOWTOAzFuSxDNMA==&divisionid=6959
-      navigation.navigate('Home', {'paramPropKey': 'paramPropValue'});
+     // navigation.navigate('Table', {'paramPropKey': 'paramPropValue'});
     }
 
     const getTeam = (division,clubName) => {
@@ -147,8 +167,8 @@ const PickClub = ({ route, navigation }) => {
   
       axios(config)
         .then(function (response) {
-          console.log(JSON.stringify(response.data));
-          console.log(config.url);
+          //console.log(JSON.stringify(response.data));
+          //console.log(config.url);
           var count = Object.keys(response.data).length;
           let divisionArray = [];
       
@@ -172,7 +192,7 @@ const PickClub = ({ route, navigation }) => {
         <StatusBar barStyle="light-content" />
         <View style={{backgroundColor: '#fff', padding: 20, borderRadius: 15}}>
       
-          <Dropdown
+          <Dropdown 
             style={[styles.dropdown, isFocus && {borderColor: 'blue'}]}
             placeholderStyle={styles.placeholderStyle}
             selectedTextStyle={styles.selectedTextStyle}
@@ -187,6 +207,7 @@ const PickClub = ({ route, navigation }) => {
             searchPlaceholder="Search..."
             value={league}
             defaultvalue={leagueName}
+            onLoad={() => alert('loaed')}
             onFocus={() => setIsFocus(true)}
             onBlur={() => setIsFocus(false)}
             onChange={item => {
@@ -210,6 +231,7 @@ const PickClub = ({ route, navigation }) => {
             placeholder={!isFocus ? 'Select Club' : '...'}
             searchPlaceholder="Search..."
             value={club}
+            defaultvalue={parseInt(club)}
             onFocus={() => setIsFocus(true)}
             onBlur={() => setIsFocus(false)}
             onChange={item => {
@@ -232,7 +254,8 @@ const PickClub = ({ route, navigation }) => {
             valueField="value"
             placeholder={!isFocus ? 'Select Division' : '...'}
             searchPlaceholder="Search..."
-            value={division}
+            value={parseInt(division)}
+            defaultvalue={parseInt(division)}
             onFocus={() => setIsFocus(true)}
             onBlur={() => setIsFocus(false)}
             onChange={item => {

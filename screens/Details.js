@@ -8,22 +8,35 @@ import { images } from '../assets/images';
 const DetailsHeader = ({ data, navigation }) => {
 
   let team = data.HomeTeam.replace(/ /g, '').toUpperCase();
-  let logoHome = images[team]["uri"];
+  let logoHome = "";
+  try{
+    logoHome = images[team]["uri"];
+  }
+  catch
+  {
+    logoHome = images["MISSING"]["uri"];
+  }
   team = data.AwayTeam.replace(/ /g, '').toUpperCase();
-  let logoAway = images[team]["uri"];
+  let logoAway = ""
+  
+  try{
+    logoAway = images[team]["uri"];
+  }
+  catch
+  {
+    logoAway = images["MISSING"]["uri"];
+  }
+  console.log(data);
+  
 
   return (
-  <View style={{ width: "100%", height: 280 }}>
-    <Image
-      source={assets.backgroundImage}
-      resizeMode="cover"
-      style={{ width: "100%", height: "80%" }}
-    />
+  <View style={{ width: "100%", height: 280 ,  backgroundColor: "#000000" }}>
+    <Image     source={assets.backgroundImage}      resizeMode="cover"      style={{ width: "100%", height: "100%" }}    />
 
-      <AwayImage imgUrl={logoAway.toString().toLowerCase()} right={10} top={50} />
+      <AwayImage imgUrl={logoAway.toString().toLowerCase()} right={10} top={80} />
       
-      <HomeImage imgUrl={logoHome.toString().toLowerCase()} left={10} top={50} />
-      <View style={{position: "absolute", top: -80, left: 0, right: 0, bottom: 0, justifyContent: 'center', alignItems: 'center'}}>  
+      <HomeImage imgUrl={logoHome.toString().toLowerCase()} left={10} top={80} />
+      <View style={{position: "absolute", top: -60, left: 0, right: 0, bottom: 0, justifyContent: 'center', alignItems: 'center'}}>  
         <DateTitle style={{padding:20}}
           title={data.Venue}
           subTitle={data.GameDate}
@@ -36,7 +49,10 @@ const DetailsHeader = ({ data, navigation }) => {
         </View>
     <CircleButton
       imgUrl={assets.left}
-      handlePress={() => navigation.goBack()}
+      handlePress={() => navigation.reset({
+        index: 0,
+        routes: [{ name: 'Home' }],
+      })}
       left={15}
       top={10}
     />
@@ -47,11 +63,17 @@ const DetailsHeader = ({ data, navigation }) => {
 
 const Details = ({ route, navigation }) => {
   const { data } = route.params;
-  let url ='https://www.google.com/maps/dir//53.349716,-6.470781/@53.349716,-6.470781,15z';
-
-  
-  const onPress = () => Linking.canOpenURL(url).then(() => {
-    Linking.openURL(url);
+ 
+  const onPress = (url) => Linking.canOpenURL(url).then(() => {
+ 
+    if (url.toString().length>0)
+    {
+      Linking.openURL(url);
+    }
+    else
+    {
+      alert('No directions found');
+    }
 });
 
  
@@ -73,14 +95,14 @@ const Details = ({ route, navigation }) => {
         ListHeaderComponent={() => (
           <React.Fragment>
             <DetailsHeader data={data} navigation={navigation} />
-            <View style={{ padding: SIZES.font }}>
+            <View style={{ padding: SIZES.medium }}>
               <DetailsDesc data={data} /> 
-              <Text onPress={() => Linking.openURL('https://www.google.com/maps/dir//53.349716,-6.470781/@53.349716,-6.470781,15z')}>Click for directions</Text>     
+              <Text onPress={() => onPress(data.Directions)}>Click for directions       </Text>
               <Image
-      source={images["LUCANUTDDIRECTIONS"]["uri"]}
+      source={images["GOOGLEDIRECTIONS"]["uri"]}
       resizeMode="cover"
-      style={{ width: "100%", height: 250 }}
-    />      
+      style={{ width: "100%", height: 280 }}  
+    />     
     
             </View>
           </React.Fragment>
