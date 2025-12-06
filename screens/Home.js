@@ -1,124 +1,141 @@
-import React,  {useEffect, useState} from "react";
-import { View, SafeAreaView, FlatList } from "react-native";
+import React, {useEffect, useState} from "react";
+import { View, FlatList, RefreshControl, ActivityIndicator } from "react-native";
+import { SafeAreaView } from 'react-native-safe-area-context'
 import { useFocusEffect } from "@react-navigation/native";
-import { NFTCard, GameCard, HomeHeader, FocusedStatusBar } from "../components";
-import { COLORS, GamesData } from "../constants";
+import {  GameCard, HomeHeader, FocusedStatusBar } from "../components";
+import { COLORS } from "../constants";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import axios from 'axios';
 
 const Home = ({ data }) => {
- 
+  const [refreshing, setRefreshing] = useState(true);
+  const [bakgameData, setbakGameData] = useState([]);
   const [gameData, setGameData] = useState([]);
-  const [leagueName, setLeagueName] = useState([]);
-  const [clubName, setClubName] = useState([]);
-  const [clubId, setClubId] = useState([]);
+  const [clubName, setClubName] = useState("");
+  const [clubId, setClubId] = useState("");
   const [divisionName, setDivisionName] = useState("");
-  const [division, setDivision] = useState("");
   const [divisionid, setDivisionid] = useState("");
   const [teamid, setTeamId] = useState("");
   
-  
+  const loadUserData = () => {
+    console.log('Refreshing data...');
+    getAdvice(teamid, divisionid);
+  };
+
   useFocusEffect(    
     React.useCallback(() => {
-    async function fetchData() {
-        // You can await here
-    console.log("focus event on the Home Page");
-    var value = await AsyncStorage.getItem("club");
-    setClubName(value);
-    var valueClubId = await AsyncStorage.getItem("clubid");
-    setClubId(valueClubId);
-    var value = await AsyncStorage.getItem("division");
-    setDivisionName(value);
-    //console.log("focus event on the value2" + value);
-    var valueDivisionId = await AsyncStorage.getItem("divisionid");
-    if(valueDivisionId==divisionid)
-    {
-      console.log("nothing to do");
-    }
-    else
-    {
-    setDivisionid(valueDivisionId);   
-    }   
-    var valueTeam = await AsyncStorage.getItem("teamid");
-    setTeamId(valueTeam);  
+      async function fetchData() {
+        try {
+          const value = await AsyncStorage.getItem("club");
+          setClubName(value || "");
+          
+          const valueClubId = await AsyncStorage.getItem("clubid");
+          setClubId(valueClubId || "");
+          
+          const valueDivision = await AsyncStorage.getItem("division");
+          setDivisionName(valueDivision || "");
+          
+          const valueDivisionId = await AsyncStorage.getItem("divisionid");
+          setDivisionid(valueDivisionId || "");
+          
+          const valueTeam = await AsyncStorage.getItem("teamid");
+          setTeamId(valueTeam || "");
 
-    global.ClubNameGlobal = clubName;
-    global.ClubId = clubId;
-    global.DivisionNameGlobal = divisionName;
-    global.DivisionId = divisionid;
-    global.TeamId = valueTeam;
-     
-      console.log("global clubid" + valueClubId);
-      console.log("global team" + valueTeam);
-      console.log("global division" + valueDivisionId);
+          // Update global variables
+          global.ClubNameGlobal = value;
+          global.ClubId = valueClubId;
+          global.DivisionNameGlobal = valueDivision;
+          global.DivisionId = valueDivisionId;
+          global.TeamId = valueTeam;
+          
+          console.log("Team ID:", valueTeam);
+          console.log("Division ID:", valueDivisionId);
+          
+          // Fetch games data
+          if (valueTeam && valueDivisionId) {
+            getAdvice(valueTeam, valueDivisionId);
+          } else {
+            setRefreshing(false);
+          }
+        } catch (error) {
+          console.log("Error fetching data:", error);
+          setRefreshing(false);
+        }
+      }
       
-        getAdvice(valueTeam,valueDivisionId);
-       }
-  
       fetchData();
-    },[divisionid])
+    }, [])
   );
 
-  const getAdvice = (team,division) => {
-    axios
-        .get("https://footballresults.azurewebsites.net/api/games?code=hhsSD7SmNHc0dKHWxqRed9x7skC0LPNo4SlFtSiquYzgAzFuIf_o0Q==", {
-          params: {
-            teamId: team,
-            divisionId: division
-          }
-        })
-        .then((response) => {
-        
-          console.log("getadvice team" + team);
-          console.log("getadvice division" + division);
-          setGameData(response.data);
-          console.log(response.data);
-        });
-};
+  const getAdvice = (team, division) => {
+    if (!team || !division) {
+      console.log("Missing team or division ID");
+      setRefreshing(false);
+      return;
+    }
 
-  /*useEffect(async () => { 
-    
-    console.log("Load event on the Home Page");
-    var value = await AsyncStorage.getItem("club");   
-    setClubName(value);
-    var value = await AsyncStorage.getItem("division");
-    setDivisionName(value);
-    var value = await AsyncStorage.getItem("divisionid");
-    setDivisionid(value);
-    //getAdvice();
-    //console.log("this working" + gameData);
-   }, []);*/
+    setRefreshing(true);
+    axios
+      .get("https://footballresults.azurewebsites.net/api/games?code=hhsSD7SmNHc0dKHWxqRed9x7skC0LPNo4SlFtSiquYzgAzFuIf_o0Q==", {
+        params: {
+          teamId: team,
+          divisionId: division
+        }
+      })
+      .then((response) => {
+        console.log("Games data received:", response.data);
+        setGameData(response.data);
+        setbakGameData(response.data);
+        setRefreshing(false);
+      })
+      .catch((error) => {
+        console.log("Error fetching games:", error);
+        setRefreshing(false);
+      });
+  };
 
   const handleSearch = (value) => {
-    if (value.length === 0) {
-      setGameData(gameData);
-    }
+    if (!value || value.length < 3) {       
+      setGameData(bakgameData);   
+      return;
+    }      
 
-    const filteredData = gameData.filter((item) =>
-      item.HomeTeam.toLowerCase().includes(value.toLowerCase())
+    const filteredData = bakgameData.filter((item) =>
+      item.home_team?.toLowerCase().includes(value.toLowerCase()) || 
+      item.away_team?.toLowerCase().includes(value.toLowerCase())
     );
 
-    if (filteredData.length === 0) {
-      setGameData(gameData);
-    } else {
-      setGameData(filteredData);
-    }
+    setGameData(filteredData.length > 0 ? filteredData : bakgameData);
   };
 
   return (
     <SafeAreaView style={{ flex: 1 }}>
       <FocusedStatusBar backgroundColor={COLORS.primary} />
       <View style={{ flex: 1 }}>
-       <View style={{ zIndex: 0 }}>        
-      <FlatList
+        <View style={{ zIndex: 0 }}> 
+          <FlatList
             data={gameData}
             renderItem={({ item }) => <GameCard data={item} />}
-            keyExtractor={(item) => item.id}
+            keyExtractor={(item) => item.id.toString()}
             showsVerticalScrollIndicator={false}
-            ListHeaderComponent={<HomeHeader onSearch={handleSearch}
-            title={clubName}
-            subTitle={divisionName}
-            />}
+            ListHeaderComponent={
+              <HomeHeader 
+                onSearch={handleSearch}
+                title={clubName}
+                subTitle={divisionName}
+              />
+            }
+            refreshControl={
+              <RefreshControl 
+                refreshing={refreshing} 
+                onRefresh={loadUserData} 
+              />
+            }
+            ListEmptyComponent={
+              refreshing ? (
+                <ActivityIndicator size="large" color={COLORS.primary} style={{ marginTop: 50 }} />
+              ) : null
+            }
           />
         </View>
 
@@ -132,8 +149,7 @@ const Home = ({ data }) => {
             zIndex: -1,
           }}
         >
-          <View
-            style={{ height: 300, backgroundColor: COLORS.primary }} />
+          <View style={{ height: 300, backgroundColor: COLORS.primary }} />
           <View style={{ flex: 1, backgroundColor: COLORS.white }} />
         </View>
       </View>

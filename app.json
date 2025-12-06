@@ -1,6 +1,6 @@
 {
   "expo": {
-    "name": "Game On",
+    "name": "Match On",
     "slug": "game-on",
     "version": "1.0.0",
     "orientation": "portrait",
@@ -22,9 +22,11 @@
         "googleMapsApiKey": "AIzaSyBsQ65Nch7KtSSASv5nG8_Aa0qXc7N6aGI"
       },
       "bundleIdentifier": "com.feelyd.gameon",
-      "buildNumber": "5"
+      "buildNumber": "11"
     },
     "android": {
+      "package" : "com.feelyd.gameon",
+      "versionCode": 1,
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#FFFFFF"

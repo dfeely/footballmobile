@@ -1,22 +1,18 @@
 import React, { Component } from 'react';
 import styled from 'styled-components/native';
 
-class TableHeader extends Component {
+class StatHeader extends Component {
 
   render() {
 
 		return (
 		
 			<StyledView>
-				<InfoText>Pos</InfoText>
+				<TeamText>Date Played</TeamText>
 				<TeamLogo/>
-				<TeamText>Team</TeamText>
-				<InfoText>PL</InfoText>
-				<InfoText>W</InfoText>
-				<InfoText>D</InfoText>
-				<InfoText>L</InfoText>
-				<InfoText>GD</InfoText>
-				<InfoText>PTS</InfoText>
+				<TeamText>Team</TeamText>				
+				<TeamText>Score</TeamText>	
+			 			
 			</StyledView>
     );
   }
@@ -25,7 +21,7 @@ class TableHeader extends Component {
 const StyledView = styled.View`
 	display: flex;
 	flex-direction: row;
-	border-bottom-color: rgb(241, 241, 241);
+	border-bottom-color: rgb(100, 100, 100);
 	border-bottom-width: 1px;
 	border-style: solid;
 	padding: 2px;
@@ -51,4 +47,4 @@ const TeamLogo = styled.Text`
 	margin-right: 10px;
 `;
 
-export default TableHeader;
+export default StatHeader;

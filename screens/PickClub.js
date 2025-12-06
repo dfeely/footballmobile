@@ -5,326 +5,310 @@ import {
   StyleSheet,
   Text,
   TouchableOpacity,
-  View 
+  View  
 } from 'react-native';
-import { NFTCard, SimpleHeader, FocusedStatusBar,BackgroundImg } from "../components";
+import { SafeAreaView } from 'react-native-safe-area-context'
+import { NFTCard, SimpleHeader, FocusedStatusBar, BackgroundImg } from "../components";
 import {Dropdown} from 'react-native-element-dropdown';
 import axios from 'axios';
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useFocusEffect } from "@react-navigation/native";
+
 const PickClub = ({ route, navigation }) => {
   
-    const [leagueData, setLeagueData] = useState([]);
-    const [clubData, setClubData] = useState([]);
-    const [divisionData, setDivisionData] = useState([]);
-    const [league, setLeague] = useState(null);
-    const [club, setClub] = useState(null);
-    const [division, setDivision] = useState(null);
-    const [leagueName, setLeagueName] = useState(null);
-    const [clubName, setClubName] = useState(null);
-    const [divisionName, setDivisionName] = useState(null);
-    const [teamId, setTeamId] = useState(null);
-    const [isFocus, setIsFocus] = useState(false);
-          
-    useEffect(() => {
-    
-      const fetchData = async () => {
-        
-        var value = AsyncStorage.getItem("league");
-        setLeagueName(value);
-        setLeague(1);
-        var valueClubId = await AsyncStorage.getItem("clubid");
-        setClub(parseInt(global.ClubId));
-        handleClub(value);
-        handleDivision(league, valueClubId);
-        setDivision(global.DivisionId);
-        setDivisionName(global.DivisionNameGlobal);
-        setClubName(global.ClubNameGlobal);
-        console.log("valueclubid" + global.ClubId);
-        console.log("valuedivisionid" + global.DivisionId);
-        console.log(value);
-
-      }
-    
-      // call the function
-      fetchData()
-
-     var config = {
-        method: 'get',
-        url: `https://footballresults.azurewebsites.net/api/leagues?code=3DOzbZZ3ZE2abswz8hKxSyD5kAaqdt0LPva1YrF8VB-UAzFuT0ZQ2w==`,
-        headers: {      
-        },        
-      };
-   
-      axios(config)
-        .then(response => {
-          //console.log(JSON.stringify(response.data));
-          var count = Object.keys(response.data).length;
-          let leagueArray = [];
-          for (var i = 0; i < count; i++) {          
-            leagueArray.push({              
-              value: response.data[i].Id,     
-              label: response.data[i].LeagueName,
-            });
-          }
-          setLeagueData(leagueArray);          
-        })
-        .catch(error => {
-          console.log(error);
-        });  
-
-        
-    }, []);
+  const [clubData, setClubData] = useState([]);
+  const [divisionData, setDivisionData] = useState([]);
+  const [club, setClub] = useState(null);
+  const [division, setDivision] = useState(null);
+  const [clubName, setClubName] = useState(null);
+  const [divisionName, setDivisionName] = useState(null);
+  const [teamId, setTeamId] = useState(null);
+  const [isFocus, setIsFocus] = useState(false);
   
-    const pleasework = () =>
-    {
-      if(clubName == null ||divisionName ==null )
-      {
-        // Names and null but ID's are populated , nothing changes, just go home 
-        //if(clubName == null ||divisionName ==null )
-        //{
-            //alert('No changes made');
-          //  navigation.navigate('Home', {'paramPropKey': 'paramPropValue'});
-           // return;
-        //}
-        //else
-        //{
-            alert('please select a club and division' + clubName)
-            return;      
-        //}
+  // League is always DDSL
+  const leagueName = "DDSL";
+  
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        // Load clubs on mount
+        await loadClubs();
+        
+        // Load saved values if they exist
+        const savedClubId = await AsyncStorage.getItem("clubid");
+        const savedClubName = await AsyncStorage.getItem("club");
+        const savedDivisionId = await AsyncStorage.getItem("divisionid");
+        const savedDivisionName = await AsyncStorage.getItem("division");
+        
+        if (savedClubId) {
+          setClub(parseInt(savedClubId));
+          setClubName(savedClubName);
+          // Load divisions for saved club
+          await loadDivisions(savedClubId);
+        }
+        
+        if (savedDivisionId) {
+          setDivision(parseInt(savedDivisionId));
+          setDivisionName(savedDivisionName);
+        }
+        
+      } catch (error) {
+        console.log('Error loading data:', error);
       }
-      getTeam(division,clubName);
-      AsyncStorage.setItem("divisionid",division.toString());
-      AsyncStorage.setItem("division",divisionName.toString());
-      AsyncStorage.setItem("club",clubName.toString());
-      AsyncStorage.setItem("league",leagueName.toString());
-      AsyncStorage.setItem("clubid",club.toString());
+    };
+    
+    fetchData();
+  }, []);
+
+  const loadClubs = async () => {
+    try {
+      const response = await axios.get(
+        'https://footballresults.azurewebsites.net/api/clubs?code=7fkd1z1Y13n4LcGMA6vMRtEAUdS2DnnApe0qBpBhs5-rAzFul40J-w=='
+      );
       
+      console.log('Clubs response:', response.data);
+      
+      const clubArray = response.data.map(club => ({
+        value: club.id || club.Id,
+        label: club.clubName || club.ClubName,
+      }));
+      
+      setClubData(clubArray);
+    } catch (error) {
+      console.log('Error loading clubs:', error);
+    }
+  };
+
+  const loadDivisions = async (clubId) => {
+    try {
+      const response = await axios.get(
+        `https://footballresults.azurewebsites.net/api/divisions?code=uG9-c1GaXTVe4BglGQU7tXo7j7ro-KLcvpZP4QKlgVHYAzFukcTYoA==&clubId=${clubId}`
+      );
+      
+      console.log('Divisions response:', response.data);
+      
+      const divisionArray = response.data.map(division => ({
+        value: division.id,
+        label: division.divisionName,
+      }));
+      
+      console.log('Division array:', divisionArray);
+      setDivisionData(divisionArray);
+    } catch (error) {
+      console.log('Error loading divisions:', error);
+      alert('Could not load divisions for this club');
+    }
+  };
+
+  const handleClubChange = async (item) => {
+    setClub(item.value);
+    setClubName(item.label);
+    setDivision(null); // Reset division when club changes
+    setDivisionName(null);
+    setDivisionData([]); // Clear divisions
+    setIsFocus(false);
+    
+    // Load divisions for selected club
+    await loadDivisions(item.value);
+  };
+
+  const handleDivisionChange = (item) => {
+    setDivision(item.value);
+    setDivisionName(item.label);
+    setIsFocus(false);
+  };
+
+  const getTeam = async (divisionId, clubName) => {
+    try {
+      const response = await axios.get(
+        "https://footballresults.azurewebsites.net/api/teams?code=C8p51ZsFglFA9VN_08-mj-rliyr1f3CRny4gvBBxOWTOAzFuSxDNMA==",
+        {
+          params: {
+            divisionId: divisionId
+          }
+        }
+      );
+      
+      console.log('Teams response:', response.data);
+      console.log('Looking for club name:', clubName);
+      
+      // Filter by teamName (lowercase)
+      const teamFilter = response.data.filter(x => x.teamName === clubName);
+      
+      console.log('Filtered teams:', teamFilter);
+      
+      if (teamFilter.length > 0) {
+        const teamId = teamFilter[0].teamId;
+        await AsyncStorage.setItem("teamid", teamId.toString());
+        setTeamId(teamId);
+        
+        // Navigate to home
+        navigation.navigate('Home', {'paramPropKey': 'paramPropValue'});
+      } else {
+        console.log('All team names in division:', response.data.map(t => t.teamName));
+        alert('Team not found for this division. Available teams: ' + response.data.map(t => t.teamName).join(', '));
+      }
+      
+    } catch (error) {
+      console.log('Error getting team:', error);
+      alert('Error loading team data');
+    }
+  };
+
+  const saveSelection = async () => {
+    if (!clubName || !divisionName) {
+      alert('Please select both a club and division');
+      return;
+    }
+    
+    try {
+      // Save to AsyncStorage
+      await AsyncStorage.setItem("divisionid", division.toString());
+      await AsyncStorage.setItem("division", divisionName);
+      await AsyncStorage.setItem("club", clubName);
+      await AsyncStorage.setItem("league", leagueName);
+      await AsyncStorage.setItem("clubid", club.toString());
+      
+      // Update global variables
       global.ClubNameGlobal = clubName;
       global.DivisionNameGlobal = divisionName;
       global.DivisionId = division;
       global.TeamId = teamId;
-      //getTeam(division,clubName); //https://footballresults.azurewebsites.net/api/teams?code=C8p51ZsFglFA9VN_08-mj-rliyr1f3CRny4gvBBxOWTOAzFuSxDNMA==&divisionid=6959
-     // navigation.navigate('Table', {'paramPropKey': 'paramPropValue'});
+      
+      // Get team and navigate
+      await getTeam(division, clubName);
+      
+    } catch (error) {
+      console.log('Error saving selection:', error);
+      alert('Error saving your selection');
     }
-
-    const getTeam = (division,clubName) => {
-      axios
-          .get("https://footballresults.azurewebsites.net/api/teams?code=C8p51ZsFglFA9VN_08-mj-rliyr1f3CRny4gvBBxOWTOAzFuSxDNMA==", {
-            params: {              
-              divisionId: division
-            }
-          })
-          .then((response) => {
-            console.log(response.data);
-            const teamFilter = response.data.filter(x => x.TeamName === clubName );
-            console.log(teamFilter);
-            console.log(teamFilter[0].TeamId);
-            AsyncStorage.setItem("teamid",teamFilter[0].TeamId);
-            setTeamId(teamFilter[0].TeamId);
-          });
-
-           var value = AsyncStorage.getItem("league");
-        setLeagueName(value);
-        setLeague(1);
   };
 
-      const handleClub = leagueCode => {
-      var config = {
-        method: 'get',
-        url: `https://footballresults.azurewebsites.net/api/clubs?code=7fkd1z1Y13n4LcGMA6vMRtEAUdS2DnnApe0qBpBhs5-rAzFul40J-w==`,
-        headers: {
-             },
-      };
-  
-      axios(config)
-        .then(function (response) {
-          console.log(JSON.stringify(response.data));
-          var count = Object.keys(response.data).length;
-          let clubArray = [];
-          for (var i = 0; i < count; i++) {
-            clubArray.push({
-              value: response.data[i].Id,
-              label: response.data[i].ClubName,
-            });
-          }
-         
-          setClubData(clubArray);      
-        })
-        .catch(function (error) {
-          console.log(error);
-        });
-    };
-  
-     const handleDivision = (leagueCode, clubCode) => {
-
-      var config = {
-        method: 'get',
-        url: `https://footballresults.azurewebsites.net/api/divisions?code=uG9-c1GaXTVe4BglGQU7tXo7j7ro-KLcvpZP4QKlgVHYAzFukcTYoA==&clubId=${clubCode}`,
-        headers: {
-        },
-      };
-  
-      axios(config)
-        .then(function (response) {
-          //console.log(JSON.stringify(response.data));
-          //console.log(config.url);
-          var count = Object.keys(response.data).length;
-          let divisionArray = [];
+  return (
+    <SafeAreaView style={{ flex: 1 }}>
+      <SimpleHeader
+        title={clubName || "Select Club"}
+        subTitle={divisionName || "Select Division"}
+      />
       
-          for (var i = 0; i < count; i++) {
-            divisionArray.push({
-              value: response.data[i].Id,
-              label: response.data[i].DivisionName,
-            });
-          }
-          setDivisionData(divisionArray);
-        })
-        .catch(function (error) {
-          console.log(error);
-        });
-    };
-  
-    return (
-      <View>
-<SimpleHeader     title={global.ClubNameGlobal}
-            subTitle={global.DivisionNameGlobal}/>
-        <StatusBar barStyle="light-content" />
-        <View style={{backgroundColor: '#fff', padding: 20, borderRadius: 15}}>
-      
-          <Dropdown 
-            style={[styles.dropdown, isFocus && {borderColor: 'blue'}]}
-            placeholderStyle={styles.placeholderStyle}
-            selectedTextStyle={styles.selectedTextStyle}
-            inputSearchStyle={styles.inputSearchStyle}
-            iconStyle={styles.iconStyle}
-            data={leagueData}
-            search
-            maxHeight={300}
-            labelField="label"
-            valueField="value"
-            placeholder={!isFocus ? 'Select League' : '...'}
-            searchPlaceholder="Search..."
-            value={league}
-            defaultvalue={leagueName}
-            onLoad={() => alert('loaed')}
-            onFocus={() => setIsFocus(true)}
-            onBlur={() => setIsFocus(false)}
-            onChange={item => {
-              setLeague(item.value);
-              handleClub(item.value);
-              setLeagueName(item.label);
-              setIsFocus(false);
-            }}
-          />
-          <Dropdown
-            style={[styles.dropdown, isFocus && {borderColor: 'blue'}]}
-            placeholderStyle={styles.placeholderStyle}
-            selectedTextStyle={styles.selectedTextStyle}
-            inputSearchStyle={styles.inputSearchStyle}
-            iconStyle={styles.iconStyle}
-            data={clubData}
-            search
-            maxHeight={300}
-            labelField="label"
-            valueField="value"
-            placeholder={!isFocus ? 'Select Club' : '...'}
-            searchPlaceholder="Search..."
-            value={club}
-            defaultvalue={parseInt(club)}
-            onFocus={() => setIsFocus(true)}
-            onBlur={() => setIsFocus(false)}
-            onChange={item => {
-              setClub(item.value);
-              handleDivision(league, item.value);
-              setClubName(item.label);
-              setIsFocus(false);
-            }}
-          />
-          <Dropdown
-            style={[styles.dropdown, isFocus && {borderColor: 'blue'}]}
-            placeholderStyle={styles.placeholderStyle}
-            selectedTextStyle={styles.selectedTextStyle}
-            inputSearchStyle={styles.inputSearchStyle}
-            iconStyle={styles.iconStyle}
-            data={divisionData}
-            search
-            maxHeight={300}
-            labelField="label"
-            valueField="value"
-            placeholder={!isFocus ? 'Select Division' : '...'}
-            searchPlaceholder="Search..."
-            value={parseInt(division)}
-            defaultvalue={parseInt(division)}
-            onFocus={() => setIsFocus(true)}
-            onBlur={() => setIsFocus(false)}
-            onChange={item => {
-              setDivision(item.value);
-              setDivisionName(item.label);
-              setIsFocus(false);           
-            }}
-          />
-          <TouchableOpacity
-            style={{
-              backgroundColor: '#0F3460',
-              padding: 20,
-              borderRadius: 15,
-              alignItems: 'center',
-            }}
-            onPress={() =>
-              pleasework()             
-            }>
-            <Text
-              style={{
-                color: '#fff',
-                textTransform: 'uppercase',
-                fontWeight: '600',
-              }}              
-              >
-              Save my club and division
-            </Text>
-          </TouchableOpacity>
-           
+      <View style={{backgroundColor: '#fff', padding: 20, borderRadius: 15}}>
+        
+        {/* League - Fixed to DDSL */}
+        <View style={styles.fixedLeague}>
+          <Text style={styles.fixedLeagueLabel}>League:</Text>
+          <Text style={styles.fixedLeagueValue}>DDSL</Text>
         </View>
+        
+        {/* Club Dropdown */}
+        <Dropdown
+          style={[styles.dropdown, isFocus && {borderColor: 'blue'}]}
+          placeholderStyle={styles.placeholderStyle}
+          selectedTextStyle={styles.selectedTextStyle}
+          inputSearchStyle={styles.inputSearchStyle}
+          iconStyle={styles.iconStyle}
+          data={clubData}
+          search
+          maxHeight={300}
+          labelField="label"
+          valueField="value"
+          placeholder="Select Club"
+          searchPlaceholder="Search..."
+          value={club}
+          onFocus={() => setIsFocus(true)}
+          onBlur={() => setIsFocus(false)}
+          onChange={handleClubChange}
+        />
+        
+        {/* Division Dropdown */}
+        <Dropdown
+          style={[styles.dropdown, isFocus && {borderColor: 'blue'}]}
+          placeholderStyle={styles.placeholderStyle}
+          selectedTextStyle={styles.selectedTextStyle}
+          inputSearchStyle={styles.inputSearchStyle}
+          iconStyle={styles.iconStyle}
+          data={divisionData}
+          search
+          maxHeight={300}
+          labelField="label"
+          valueField="value"
+          placeholder={club ? "Select Division" : "Select a club first"}
+          searchPlaceholder="Search..."
+          value={division}
+          onFocus={() => setIsFocus(true)}
+          onBlur={() => setIsFocus(false)}
+          onChange={handleDivisionChange}
+          disable={!club || divisionData.length === 0}
+        />
+        
+        {/* Save Button */}
+        <TouchableOpacity
+          style={styles.saveButton}
+          onPress={saveSelection}>
+          <Text style={styles.saveButtonText}>
+            Save my club and division
+          </Text>
+        </TouchableOpacity>
+         
       </View>
-    );
-  };
-  
-  export default PickClub;
-  
-  const styles = StyleSheet.create({
-    dropdown: {
-      height: 40,
-      borderColor: 'gray',
-      borderWidth: 0.5,
-      borderRadius: 8,
-      paddingHorizontal: 8,
-      marginBottom: 10,
-    },
-    icon: {
-      marginRight: 5,
-    },
-    label: {
-      position: 'absolute',
-      backgroundColor: 'white',
-      left: 22,
-      top: 8,
-      zIndex: 999,
-      paddingHorizontal: 8,
-      fontSize: 14,
-    },
-    placeholderStyle: {
-      fontSize: 14,
-    },
-    selectedTextStyle: {
-      fontSize: 14,
-    },
-    iconStyle: {
-      width: 20,
-      height: 20,
-    },
-    inputSearchStyle: {
-      height: 40,
-      fontSize: 16,
-    },
-  });
+    </SafeAreaView>
+  );
+};
+
+export default PickClub;
+
+const styles = StyleSheet.create({
+  fixedLeague: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    padding: 12,
+    backgroundColor: '#f5f5f5',
+    borderRadius: 8,
+    marginBottom: 10,
+  },
+  fixedLeagueLabel: {
+    fontSize: 14,
+    fontWeight: '600',
+    marginRight: 10,
+    color: '#333',
+  },
+  fixedLeagueValue: {
+    fontSize: 14,
+    color: '#0F3460',
+    fontWeight: '600',
+  },
+  dropdown: {
+    height: 50,
+    borderColor: 'gray',
+    borderWidth: 0.5,
+    borderRadius: 8,
+    paddingHorizontal: 8,
+    marginBottom: 10,
+  },
+  placeholderStyle: {
+    fontSize: 14,
+    color: '#999',
+  },
+  selectedTextStyle: {
+    fontSize: 14,
+  },
+  iconStyle: {
+    width: 20,
+    height: 20,
+  },
+  inputSearchStyle: {
+    height: 40,
+    fontSize: 16,
+  },
+  saveButton: {
+    backgroundColor: '#0F3460',
+    padding: 20,
+    borderRadius: 15,
+    alignItems: 'center',
+    marginTop: 10,
+  },
+  saveButtonText: {
+    color: '#fff',
+    textTransform: 'uppercase',
+    fontWeight: '600',
+  },
+});

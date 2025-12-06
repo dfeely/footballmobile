@@ -1,64 +1,5 @@
 const images = {
-  ARS: {
-    uri: require('./images/ARS.png')
-  },
-	BHA: {
-    uri: require('./images/BHA.png')
-  },
-	BOU: {
-		uri: require('./images/BOU.png')
-	},
-	BUR: {
-		uri: require('./images/BUR.png')
-	},
-	CHE: {
-		uri: require('./images/CHE.png')
-	},
-	CRY: {
-		uri: require('./images/CRY.png')
-	},
-	EVE: {
-		uri: require('./images/EVE.png')
-	},
-	HUD: {
-		uri: require('./images/HUD.png')
-	},
-	LEI: {
-		uri: require('./images/LEI.png')
-	},
-	LIV: {
-		uri: require('./images/LIV.png')
-	},
-	MAN: {
-		uri: require('./images/MAN.png')
-	},
-	MNC: {
-		uri: require('./images/MNC.png')
-	},
-	NEW: {
-		uri: require('./images/NEW.png')
-	},
-	SOU: {
-		uri: require('./images/SOU.png')
-	},
-	STK: {
-		uri: require('./images/STK.png')
-	},
-	SWA: {
-		uri: require('./images/SWA.png')
-	},
-	TOT: {
-		uri: require('./images/TOT.png')
-	},
-	WAT: {
-		uri: require('./images/WAT.png')
-	},
-	WBA: {
-		uri: require('./images/WBA.png')
-	},
-	WHU: {
-		uri: require('./images/WHU.png')
-	},
+   
 	DUNDRUMFC: {
 		uri: require('./images/dundrumfc.jpg')
 	},
@@ -134,9 +75,68 @@ const images = {
 	SHANKILLFC: {
 		uri: require('./images/shankillfc.jpg')
 	},
+	LARKVIEWFC: {
+		uri: require('./images/larkviewfc.png')
+	},
 	MISSING: {
 		uri: require('./images/missing.png')
 	},
+	CASTLEKNOCKCELTIC: {
+		uri: require('./images/castleknockceltic.jpg')
+	},
+	PARKVALEFC: {
+		uri: require('./images/parkvalefc.jpg')
+	},
+	RAILWAYUNION: {
+		uri: require('./images/railwayunion.png')
+	},
+	TOLKAROVERS: {
+		uri: require('./images/tolkarovers.jpg')
+	},
+	STKEVINSBOYS: {
+		uri: require('./images/stkevinsboys.jpg')
+	},
+	STELLAMARIS: {
+		uri: require('./images/stellamaris.png')
+	},
+	TEMPLEOGUEUTD: {
+		uri: require('./images/templeogueunited.png')
+	},
+	WAYSIDECELTIC: {
+		uri: require('./images/waysideceltic.png')
+	},
+	LEICESTERCELTIC: {
+		uri: require('./images/leicesterceltic.jpg')
+	},
+	ESKERCELTIC: {
+		uri: require('./images/eskerceltic.jpg')
+	},
+	VERONAFC: {
+		uri: require('./images/veronafc.jpg')
+	},
+	MARKSCELTIC: {
+		uri: require('./images/marksceltic.jpg')
+	},
+	BROADFORDROVERS: {
+		uri: require('./images/broadfordrovers.jpg')
+	},
+	MCKELVEYCELTIC: {
+		uri: require('./images/mckelveyceltic.jpg')
+	},
+	CABINTEELYFC: {
+		uri: require('./images/cabinteelyfc.jpg')
+	},
+	STJOHNVIANNEY: {
+		uri: require('./images/stjohnvianney.jpg')
+	},
+	FIRHOUSECARMEL: {
+		uri: require('./images/firhousecarmel.jpg')
+	},
+	LOURDESCELTIC: {
+		uri: require('./images/lourdesceltic.jpg')
+	},
+	
+		
 }
 
 export { images };

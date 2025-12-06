@@ -7,7 +7,7 @@ import Home from "../screens/Home";
 import FootballTableScreen from "../screens/FootballTableScreen";
 import PickClub from "../screens/PickClub";
 import Details from "../screens/Details";
- 
+import TeamStatistics from "../screens/TeamStatistics"
 
 //Screen names
 const homeName = "Home";
@@ -18,21 +18,27 @@ const tableName = "Details";
 const Tab = createBottomTabNavigator();
 const Stack = createStackNavigator();
 
-function Root() {
+function MainContainer() {
   return (
+    <NavigationContainer>
     <Stack.Navigator  screenOptions={{
-      headerShown: false
-    }}>
-      
-      <Stack.Screen name="PickClub" component={PickClub} />
-      <Stack.Screen name={tableName} component={Details}  />
+      headerShown: false,
+      activeTintColor: 'black',
+      inactiveTintColor: 'grey',
+      labelStyle: { paddingBottom: 10, fontSize: 10 },
+      style: { padding: 10, height: 70},
+    }}>     
+      <Stack.Screen name="Home" component={Root} /> 
+      <Stack.Screen name="Details" component={Details}  initialParams={{ divisionid:  global.DivisionId  }} />
+      <Stack.Screen name={"TeamStatistics"} component={TeamStatistics}  />
     </Stack.Navigator>
+    </NavigationContainer>
   );
 }
 
-function MainContainer() { 
+function Root() { 
   return (    
-    <NavigationContainer>
+ 
       <Tab.Navigator
         initialRouteName={homeName}
           screenOptions={({ route }) => ({
@@ -64,9 +70,9 @@ function MainContainer() {
 
         <Tab.Screen name={homeName} component={Home} />
         <Tab.Screen name={detailsName} component={FootballTableScreen} initialParams={{ divisionid:  global.DivisionId  }}   />
-        <Tab.Screen name={settingsName} component={Root} />
+        <Tab.Screen name={settingsName} component={PickClub} />       
      </Tab.Navigator>
-    </NavigationContainer>
+
   );
 }
 

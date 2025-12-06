@@ -7,14 +7,21 @@ import { RectButton, CircleButton} from "./Button";
 import { images } from '../assets/images';
 
 const SimpleHeader = ({ onSearch, title, subTitle }) => {  
+
+  let logo = "";
+  let team = "";
+
   if (title ==null)
   {    
     title = "dundrumfc";
     subTitle = "not selected, go to settings";
   }  
-  let team = title.replace(/ /g, '').toUpperCase();
-  let logo = images[team]["uri"];
- 
+   
+  try{
+    team = title.replace(/ /g, '').toUpperCase();
+    logo = images[team]["uri"];
+    }
+    catch {}
 
   return (
     <View

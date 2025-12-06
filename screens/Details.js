@@ -1,84 +1,103 @@
 import React from "react";
-import { View, Text, SafeAreaView, Image, StatusBar, FlatList, Linking } from "react-native";
-
-import { COLORS, SIZES, assets, SHADOWS, FONTS } from "../constants";
-import {NFTTitle,DateTitle,Scoreboard, CircleButton, SubInfo, DetailsDesc, DetailsBid, FocusedStatusBar,HomeImage , AwayImage } from "../components";
+import { View, Text, Image, FlatList, Linking } from "react-native";
+import { SafeAreaView } from 'react-native-safe-area-context'
+import {  SIZES, assets } from "../constants";
+import {  DateTitle, Scoreboard, CircleButton,  DetailsDesc, DetailsBid, FocusedStatusBar, HomeImage, AwayImage } from "../components";
 
 import { images } from '../assets/images';
-const DetailsHeader = ({ data, navigation }) => {
 
-  let team = data.HomeTeam.replace(/ /g, '').toUpperCase();
+const DetailsHeader = ({ data, navigation }) => {
+  let team = data.home_team.replace(/ /g, '').replace('/', '').replace('u0027', '').toUpperCase();
   let logoHome = "";
-  try{
+  
+  try {
     logoHome = images[team]["uri"];
-  }
-  catch
-  {
+  } catch {
     logoHome = images["MISSING"]["uri"];
   }
-  team = data.AwayTeam.replace(/ /g, '').toUpperCase();
-  let logoAway = ""
   
-  try{
+  team = data.away_team.replace(/ /g, '').replace('/', '').replace('u0027', '').toUpperCase();
+  let logoAway = "";
+  
+  try {
     logoAway = images[team]["uri"];
-  }
-  catch
-  {
+  } catch {
     logoAway = images["MISSING"]["uri"];
   }
-  console.log(data);
-  
 
   return (
-  <View style={{ width: "100%", height: 280 ,  backgroundColor: "#000000" }}>
-    <Image     source={assets.backgroundImage}      resizeMode="cover"      style={{ width: "100%", height: "100%" }}    />
+    <View style={{ width: "100%", height: 280, backgroundColor: "#000000" }}>
+      <Image
+        source={assets.backgroundImage}
+        resizeMode="cover"
+        style={{ width: "100%", height: "100%" }}
+      />
 
       <AwayImage imgUrl={logoAway.toString().toLowerCase()} right={10} top={80} />
-      
       <HomeImage imgUrl={logoHome.toString().toLowerCase()} left={10} top={80} />
-      <View style={{position: "absolute", top: -60, left: 0, right: 0, bottom: 0, justifyContent: 'center', alignItems: 'center'}}>  
-        <DateTitle style={{padding:20}}
-          title={data.Venue}
-          subTitle={data.GameDate}
+      
+      <View style={{
+        position: "absolute",
+        top: -60,
+        left: 0,
+        right: 0,
+        bottom: 0,
+        justifyContent: 'center',
+        alignItems: 'center'
+      }}>
+        <DateTitle
+          style={{ padding: 20 }}
+          title={data.venue}
+          subTitle={data.game_date}
           titleSize={SIZES.medium}
           subTitleSize={SIZES.small}
-        />        
-          <Scoreboard Homescore={data.HomeScore} Awayscore={data.AwayScore} Played={data.Played}/>
-          
-  
-        </View>
-    <CircleButton
-      imgUrl={assets.left}
-      handlePress={() => navigation.reset({
-        index: 0,
-        routes: [{ name: 'Home' }],
-      })}
-      left={15}
-      top={10}
-    />
- 
-  </View>
-);
+        />
+        <Scoreboard
+          Homescore={data.home_score}
+          Awayscore={data.away_score}
+          Played={data.played}
+        />
+      </View>
+      
+      <CircleButton
+        imgUrl={assets.left}
+        handlePress={() => navigation.reset({
+          index: 0,
+          routes: [{ name: 'Home' }],
+        })}
+        left={15}
+        top={10}
+      />
+    </View>
+  );
 }
 
 const Details = ({ route, navigation }) => {
   const { data } = route.params;
- 
-  const onPress = (url) => Linking.canOpenURL(url).then(() => {
- 
-    if (url.toString().length>0)
-    {
-      Linking.openURL(url);
-    }
-    else
-    {
-      alert('No directions found');
-    }
-});
 
- 
+  const onPress = (url) => {
+    if (!url || url.toString().length === 0) {
+      alert('No directions found');
+      return;
+    }
+
+    Linking.canOpenURL(url).then((supported) => {
+      if (supported) {
+        try {
+          Linking.openURL(url);
+        } catch (error) {
+          alert('No directions found: ' + url);
+        }
+      } else {
+        alert('Cannot open URL: ' + url);
+      }
+    }).catch((error) => {
+      alert('Error opening directions');
+    });
+  };
+
   return (
-    <SafeAreaView style={{ flex: 1,height: "100%" }}>
+    <SafeAreaView style={{ flex: 1, height: "100%" }}>
       <FocusedStatusBar
         barStyle="dark-content"
         backgroundColor="transparent"
@@ -96,22 +115,21 @@ const Details = ({ route, navigation }) => {
           <React.Fragment>
             <DetailsHeader data={data} navigation={navigation} />
             <View style={{ padding: SIZES.medium }}>
-              <DetailsDesc data={data} /> 
-              <Text onPress={() => onPress(data.Directions)}>Click for directions       </Text>
+              <DetailsDesc data={data} />
+              <Text onPress={() => onPress(data.directions)}>
+                Click for directions
+              </Text>
               <Image
-      source={images["GOOGLEDIRECTIONS"]["uri"]}
-      resizeMode="cover"
-      style={{ width: "100%", height: 280 }}  
-    />     
-    
+                source={images["GOOGLEDIRECTIONS"]["uri"]}
+                resizeMode="cover"
+                style={{ width: "100%", height: 280 }}
+              />
             </View>
           </React.Fragment>
         )}
-      />  
+      />
     </SafeAreaView>
   );
 };
-
- 
 
 export default Details;
