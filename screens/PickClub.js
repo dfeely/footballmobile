@@ -13,6 +13,7 @@ import {Dropdown} from 'react-native-element-dropdown';
 import axios from 'axios';
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useFocusEffect } from "@react-navigation/native";
+import { API_ENDPOINTS } from '../constants/apiConfig';
 
 const PickClub = ({ route, navigation }) => {
   
@@ -78,9 +79,10 @@ const PickClub = ({ route, navigation }) => {
       console.log('Error loading clubs:', error);
     }
   };
-
+ 
   const loadDivisions = async (clubId) => {
     try {
+      
       const response = await axios.get(
         `https://footballresults.azurewebsites.net/api/divisions?code=uG9-c1GaXTVe4BglGQU7tXo7j7ro-KLcvpZP4QKlgVHYAzFukcTYoA==&clubId=${clubId}`
       );

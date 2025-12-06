@@ -10,7 +10,6 @@ import TableHeader from "./TableHeader";
 import StatHeader from "./StatHeader";
 import StatBody from "./StatBody"
 import Loading from "./Loading";
-import FootballTable from "./FootballTable";
 import SimpleHeader from "./SimpleHeader";
 import MainContainer from "./MainContainer";
 import ClubHeader from "./ClubHeader";
@@ -33,8 +32,7 @@ export {
   TableBody,
   TableHeader,
   Loading,
-  FootballTable,
-  MainContainer,
+    MainContainer,
   DateTitle,
   StatHeader,
   StatBody,
