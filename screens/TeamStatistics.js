@@ -99,7 +99,6 @@ const TeamStatistics = ({ route, navigation }) => {
   let teamName2 = teamName
   let teamId2= teamId ;    
   
-  console.log("TeamStatistics: teamId2=",teamId2," teamName2=",gameData);
 
   return (
  

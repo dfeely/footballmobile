@@ -130,18 +130,5 @@ const HomeHeader = ({ onSearch, title, subTitle }) => {
     </View>
   );
 };
-
-
-const NavView = styled.View`
-	flex-direction: row;
-	margin-bottom: 20px;
-	margin-left: 20px;
-	margin-right: 20px;
-	justify-content: space-between;
-`;
-const MenuText = styled.Text`
-	font-family: 'premierleague';
-  color: rgb(60, 0, 60);
-	font-size: 22px;
-`;
+ 
 export default HomeHeader;

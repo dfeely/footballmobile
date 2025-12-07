@@ -108,8 +108,7 @@ const Details = ({ route, navigation }) => {
         translucent={true}
       />
       <FlatList
-        data={data.bids}
-        renderItem={({ item }) => <DetailsBid bid={item} />}
+        data={data.bids}        
         keyExtractor={(item) => item.id}
         showsVerticalScrollIndicator={false}
         contentContainerStyle={{
