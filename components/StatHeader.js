@@ -1,10 +1,7 @@
 import React, { Component } from 'react';
 import styled from 'styled-components/native';
 
-class StatHeader extends Component {
-
-  render() {
-
+const StatHeader = () => {
 		return (
 		
 			<StyledView>
@@ -15,7 +12,7 @@ class StatHeader extends Component {
 			</StyledView>
     );
   }
-}
+
 
 const StyledView = styled.View`
 	display: flex;

@@ -8,7 +8,7 @@ import {
   View  
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context'
-import { NFTCard, SimpleHeader, FocusedStatusBar, BackgroundImg } from "../components";
+import { NFTCard, SimpleHeader, FocusedStatusBar } from "../components";
 import {Dropdown} from 'react-native-element-dropdown';
 import axios from 'axios';
 import AsyncStorage from "@react-native-async-storage/async-storage";

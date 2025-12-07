@@ -2,7 +2,7 @@ import React, {useEffect, useState} from "react";
 import { View, FlatList, RefreshControl, ActivityIndicator } from "react-native";
 import { SafeAreaView } from 'react-native-safe-area-context'
 import { useFocusEffect } from "@react-navigation/native";
-import {  GameCard, HomeHeader, FocusedStatusBar } from "../components";
+import { GameCard, HomeHeader, FocusedStatusBar } from "../components";
 import { API_ENDPOINTS, COLORS } from "../constants";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import axios from 'axios';
@@ -83,6 +83,7 @@ const Home = ({ data }) => {
       })
       .catch((error) => {        
         setRefreshing(false);
+        Alert.alert('Error', 'Failed to load games. Please try again.');  
       });
   };
 

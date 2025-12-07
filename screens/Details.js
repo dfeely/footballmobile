@@ -96,7 +96,7 @@ const Details = ({ route, navigation }) => {
         alert('Cannot open URL: ' + url);
       }
     }).catch((error) => {
-      alert('Error opening directions');
+      alert('Error opening directions');      
     });
   };
 

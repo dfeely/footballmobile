@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { View, Text, ActivityIndicator } from "react-native";
 import { SafeAreaView } from 'react-native-safe-area-context'
-import { TableBody, TableHeader, SimpleHeader, FocusedStatusBar, BackgroundImg } from "../components";
+import { TableBody, TableHeader, SimpleHeader, FocusedStatusBar } from "../components";
 import { useFocusEffect } from "@react-navigation/native";
 import { useNavigation } from "@react-navigation/native";
 import { ScrollView } from 'react-native-virtualized-view';

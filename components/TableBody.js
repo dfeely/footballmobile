@@ -1,67 +1,110 @@
-import React, { Component } from 'react';
+import React from 'react';
 import styled from 'styled-components/native';
-import { images } from '../assets/images';
 import { FlatList, Pressable } from 'react-native';
-import { useNavigation } from '@react-navigation/native';
+import PropTypes from 'prop-types';
+import { images } from '../assets/images';
 
-class TableBody extends Component {
-  state = {
-    table: []
+// Utility function to normalize team names
+const normalizeTeamName = (teamName) => {
+  if (!teamName) return '';
+  return teamName
+    .replace(/\s+/g, '')
+    .replace(/\//g, '')
+    .replace(/'/g, '')
+    .toUpperCase();
+};
+
+// Utility function to get team logo
+const getTeamLogo = (teamName) => {
+  const normalized = normalizeTeamName(teamName);
+  return images[normalized]?.uri || images.MISSING?.uri;
+};
+
+// Utility function to clean display name
+const cleanTeamName = (teamName) => {
+  return teamName?.replace(/'/g, '') || '';
+};
+
+const TableBody = ({ table = [], navigation }) => {
+  const renderTableRow = ({ item }) => {
+    const logo = getTeamLogo(item.teamName);
+    const displayName = cleanTeamName(item.teamName);
+
+    const handlePress = () => {
+      navigation.navigate('TeamStatistics', {
+        itemId: item.teamId || 86,
+        data: item,
+        teamName: displayName,
+        teamId: item.teamId,
+      });
+    };
+
+    return (
+      <StyledView>
+        <InfoText>{item.position}</InfoText>
+        <Pressable
+          onPress={handlePress}
+          accessibilityLabel={`View statistics for ${displayName}`}
+          accessibilityRole="button"
+        >
+          <TeamLogo 
+            source={logo}
+            accessibilityLabel={`${displayName} logo`}
+          />
+        </Pressable>
+        <TeamText>{displayName}</TeamText>
+        <InfoText>{item.played}</InfoText>
+        <InfoText>{item.wins}</InfoText>
+        <InfoText>{item.draws}</InfoText>
+        <InfoText>{item.losses}</InfoText>
+        <InfoText>{item.goalDifference}</InfoText>
+        <InfoText>{item.points}</InfoText>
+      </StyledView>
+    );
   };
 
-  render() {
-    const { navigation } = this.props;
-    
-    return (
-      <FlatList
-        contentContainerStyle={{ flexGrow: 1 }}
-        data={this.props.table}
-        renderItem={({ item }) => {
-          let team = item.teamName.replace(/ /g, '').replace('/', '').replace('u0027', '').toUpperCase();
-          let logo = "";
-          
-          try {
-            logo = images[team]["uri"];
-          } catch {
-            logo = images["MISSING"]["uri"];
-          }
+  return (
+    <FlatList
+      contentContainerStyle={{ flexGrow: 1 }}
+      data={table}
+      renderItem={renderTableRow}
+      keyExtractor={(item, index) => item.teamId?.toString() || index.toString()}
+      ListEmptyComponent={
+        <EmptyText>No teams available</EmptyText>
+      }
+    />
+  );
+};
 
-          return (
-            <StyledView style={{ backgroundColor: '#fff', padding: 10, borderRadius: 5 }}>
-              <InfoText>{item.position}</InfoText>
-              <Pressable
-                onPress={() => navigation.navigate('TeamStatistics', {
-                  itemId: 86,
-                  data: item,
-                  teamName: item.teamName.replace('u0027', ''),
-                  teamId: item.teamId,
-                })}
-              >
-                <TeamLogo source={logo} />
-              </Pressable>
-              <TeamText>{item.teamName.replace('u0027', '')}</TeamText>
-              <InfoText>{item.played}</InfoText>
-              <InfoText>{item.wins}</InfoText>
-              <InfoText>{item.draws}</InfoText>
-              <InfoText>{item.losses}</InfoText>
-              <InfoText>{item.goalDifference}</InfoText>
-              <InfoText>{item.points}</InfoText>
-            </StyledView>
-          );
-        }}
-        keyExtractor={(item, index) => index.toString()}
-      />
-    );
-  }
-}
+// PropTypes for type checking
+TableBody.propTypes = {
+  table: PropTypes.arrayOf(
+    PropTypes.shape({
+      teamId: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+      teamName: PropTypes.string.isRequired,
+      position: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+      played: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+      wins: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+      draws: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+      losses: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+      goalDifference: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+      points: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+    })
+  ),
+  navigation: PropTypes.shape({
+    navigate: PropTypes.func.isRequired,
+  }).isRequired,
+};
 
 const StyledView = styled.View`
   display: flex;
   flex-direction: row;
+  background-color: #fff;
   border-bottom-color: rgb(241, 241, 241);
   border-bottom-width: 1px;
   border-style: solid;
-  padding: 8px;
+  padding: 10px;
+  border-radius: 5px;
 `;
 
 const InfoText = styled.Text`
@@ -82,6 +125,14 @@ const TeamLogo = styled.Image`
   width: 40px;
   height: 40px;
   margin-right: 10px;
+`;
+
+const EmptyText = styled.Text`
+  color: rgb(100, 100, 100);
+  font-size: 14px;
+  text-align: center;
+  margin-top: 20px;
+  font-family: 'InterRegular';
 `;
 
 export default TableBody;

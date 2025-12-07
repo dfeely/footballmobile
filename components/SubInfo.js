@@ -1,6 +1,4 @@
-import React from "react";
 import { View, Image, Text } from "react-native";
-
 import { SIZES, FONTS, COLORS, SHADOWS, assets } from "../constants";
 
 
@@ -31,7 +29,7 @@ export const DateTitle = ({ title, subTitle, titleSize, subTitleSize }) => {
   );
 };
 
-export const NFTTitle = ({ title, subTitle, titleSize, subTitleSize }) => {
+export const GameTitle = ({ title, subTitle, titleSize, subTitleSize }) => {
   return (
     <View style={{ flexDirection: "row", alignItems: "center",width: '100%'}}>
       <View style={{ width: '50%' ,alignItems: "center"}}>

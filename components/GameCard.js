@@ -3,7 +3,7 @@ import { useNavigation } from "@react-navigation/native";
 import { View } from "react-native";
 import { images } from '../assets/images';
 import { COLORS, SIZES, SHADOWS, assets } from "../constants";
-import {  NFTTitle, Scoreboard, DateTitle } from "./SubInfo";
+import {  GameTitle, Scoreboard, DateTitle } from "./SubInfo";
 import { RectButton, HomeImage, AwayImage } from "./Button";
 
 const GameCard = ({ data }) => {
@@ -80,7 +80,7 @@ const GameCard = ({ data }) => {
         alignItems: "center",
         justifyContent: "space-between"
       }}>
-        <NFTTitle
+        <GameTitle
           title={data.home_team}
           subTitle={data.away_team}
           titleSize={SIZES.medium}

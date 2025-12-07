@@ -3,9 +3,8 @@ import styled from 'styled-components/native';
 import { images } from '../assets/images';
 import {FlatList} from 'react-native';
 
-class ClubHeader extends Component  {
-	
-   render() {   	 
+const ClubHeader = () =>
+{
     return (		 
         <FlatList contentContainerStyle={{flexGrow: 1}}
           data={ this.props.table}					
@@ -40,7 +39,7 @@ class ClubHeader extends Component  {
         />    
     );
   }
-}
+
 
 const StyledView = styled.View`
 	display: flex;

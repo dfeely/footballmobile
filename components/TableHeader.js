@@ -1,9 +1,7 @@
 import React, { Component } from 'react';
 import styled from 'styled-components/native';
 
-class TableHeader extends Component {
-
-  render() {
+const TableHeader = () => {
 
 		return (
 		
@@ -20,7 +18,6 @@ class TableHeader extends Component {
 			</StyledView>
     );
   }
-}
 
 const StyledView = styled.View`
 	display: flex;

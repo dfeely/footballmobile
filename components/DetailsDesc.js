@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { View, Text,Image } from "react-native";
 
-import {  NFTTitle } from "./SubInfo";
+import {  GameTitle } from "./SubInfo";
 import { COLORS, SIZES, FONTS , assets} from "../constants";
 import { CircleButton,DateTitle } from "../components";
 
@@ -17,7 +17,7 @@ const DetailsDesc = ({ data }) => {
           alignItems: "center",
         }}
       >    
-    <NFTTitle 
+    <GameTitle 
                    title={data.HomeTeam}
           subTitle={data.AwayTeam}
           titleSize={SIZES.medium}

@@ -1,7 +1,7 @@
 import HomeHeader from "./HomeHeader";
 import GameCard from "./GameCard";
 import { RectButton, HomeImage, AwayImage, CircleButton } from "./Button";
-import { SubInfo, People, Scoreboard,  NFTTitle, DateTitle } from "./SubInfo";
+import { Scoreboard,  GameTitle, DateTitle } from "./SubInfo";
 import FocusedStatusBar from "./FocusedStatusBar";
 import DetailsDesc from './DetailsDesc';
 import TableBody from "./TableBody";
@@ -19,7 +19,7 @@ export {
   CircleButton,
   Scoreboard,
   RectButton,
-  NFTTitle, 
+  GameTitle, 
   FocusedStatusBar,
   DetailsDesc,
   HomeImage,
