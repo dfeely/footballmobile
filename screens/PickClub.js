@@ -13,7 +13,7 @@ import {Dropdown} from 'react-native-element-dropdown';
 import axios from 'axios';
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useFocusEffect } from "@react-navigation/native";
-import { API_ENDPOINTS } from '../constants/apiConfig';
+import { API_ENDPOINTS } from '../constants/api';
 
 const PickClub = ({ route, navigation }) => {
   
@@ -63,41 +63,31 @@ const PickClub = ({ route, navigation }) => {
 
   const loadClubs = async () => {
     try {
-      const response = await axios.get(
-        'https://footballresults.azurewebsites.net/api/clubs?code=7fkd1z1Y13n4LcGMA6vMRtEAUdS2DnnApe0qBpBhs5-rAzFul40J-w=='
-      );
-      
-      console.log('Clubs response:', response.data);
+      const response = await axios.get(API_ENDPOINTS.CLUBS);      
       
       const clubArray = response.data.map(club => ({
         value: club.id || club.Id,
         label: club.clubName || club.ClubName,
-      }));
-      
+      }));      
       setClubData(clubArray);
-    } catch (error) {
-      console.log('Error loading clubs:', error);
+    } catch (error) {      
+      alert('Could not load clubs');
     }
   };
  
   const loadDivisions = async (clubId) => {
-    try {
-      
-      const response = await axios.get(
-        `https://footballresults.azurewebsites.net/api/divisions?code=uG9-c1GaXTVe4BglGQU7tXo7j7ro-KLcvpZP4QKlgVHYAzFukcTYoA==&clubId=${clubId}`
-      );
-      
-      console.log('Divisions response:', response.data);
+    try {      
+      const response = await axios.get(API_ENDPOINTS.DIVISIONS, {
+      params: { clubId: clubId }
+      });      
       
       const divisionArray = response.data.map(division => ({
         value: division.id,
         label: division.divisionName,
-      }));
+      }));      
       
-      console.log('Division array:', divisionArray);
       setDivisionData(divisionArray);
-    } catch (error) {
-      console.log('Error loading divisions:', error);
+    } catch (error) {      
       alert('Could not load divisions for this club');
     }
   };
@@ -108,8 +98,7 @@ const PickClub = ({ route, navigation }) => {
     setDivision(null); // Reset division when club changes
     setDivisionName(null);
     setDivisionData([]); // Clear divisions
-    setIsFocus(false);
-    
+    setIsFocus(false);    
     // Load divisions for selected club
     await loadDivisions(item.value);
   };
@@ -122,22 +111,15 @@ const PickClub = ({ route, navigation }) => {
 
   const getTeam = async (divisionId, clubName) => {
     try {
-      const response = await axios.get(
-        "https://footballresults.azurewebsites.net/api/teams?code=C8p51ZsFglFA9VN_08-mj-rliyr1f3CRny4gvBBxOWTOAzFuSxDNMA==",
+      const response = await axios.get(API_ENDPOINTS.TEAMS,
         {
           params: {
             divisionId: divisionId
           }
         }
-      );
-      
-      console.log('Teams response:', response.data);
-      console.log('Looking for club name:', clubName);
-      
+      );      
       // Filter by teamName (lowercase)
-      const teamFilter = response.data.filter(x => x.teamName === clubName);
-      
-      console.log('Filtered teams:', teamFilter);
+      const teamFilter = response.data.filter(x => x.teamName === clubName);    
       
       if (teamFilter.length > 0) {
         const teamId = teamFilter[0].teamId;
@@ -146,13 +128,11 @@ const PickClub = ({ route, navigation }) => {
         
         // Navigate to home
         navigation.navigate('Home', {'paramPropKey': 'paramPropValue'});
-      } else {
-        console.log('All team names in division:', response.data.map(t => t.teamName));
+      } else {   
         alert('Team not found for this division. Available teams: ' + response.data.map(t => t.teamName).join(', '));
       }
       
     } catch (error) {
-      console.log('Error getting team:', error);
       alert('Error loading team data');
     }
   };

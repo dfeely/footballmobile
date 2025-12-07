@@ -7,6 +7,7 @@ import { COLORS, SIZES, assets, SHADOWS, FONTS } from "../constants";
 import styled from 'styled-components/native';
 import { ScrollView } from 'react-native-virtualized-view'
 import { images } from '../assets/images';
+
 const StatsHeader = ({ data, navigation,teamid, teamname}) => { 
    
   let team = teamname.replace(/ /g, '').replace('/', '').replace('u0027','').toUpperCase();

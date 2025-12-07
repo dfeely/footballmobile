@@ -3,7 +3,7 @@ import { View, FlatList, RefreshControl, ActivityIndicator } from "react-native"
 import { SafeAreaView } from 'react-native-safe-area-context'
 import { useFocusEffect } from "@react-navigation/native";
 import {  GameCard, HomeHeader, FocusedStatusBar } from "../components";
-import { COLORS } from "../constants";
+import { API_ENDPOINTS, COLORS } from "../constants";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import axios from 'axios';
 
@@ -17,8 +17,7 @@ const Home = ({ data }) => {
   const [divisionid, setDivisionid] = useState("");
   const [teamid, setTeamId] = useState("");
   
-  const loadUserData = () => {
-    console.log('Refreshing data...');
+  const loadUserData = () => {    
     getAdvice(teamid, divisionid);
   };
 
@@ -46,19 +45,15 @@ const Home = ({ data }) => {
           global.ClubId = valueClubId;
           global.DivisionNameGlobal = valueDivision;
           global.DivisionId = valueDivisionId;
-          global.TeamId = valueTeam;
-          
-          console.log("Team ID:", valueTeam);
-          console.log("Division ID:", valueDivisionId);
-          
+          global.TeamId = valueTeam;          
+           
           // Fetch games data
           if (valueTeam && valueDivisionId) {
             getAdvice(valueTeam, valueDivisionId);
           } else {
             setRefreshing(false);
           }
-        } catch (error) {
-          console.log("Error fetching data:", error);
+        } catch (error) {          
           setRefreshing(false);
         }
       }
@@ -68,28 +63,25 @@ const Home = ({ data }) => {
   );
 
   const getAdvice = (team, division) => {
-    if (!team || !division) {
-      console.log("Missing team or division ID");
+    if (!team || !division) {      
       setRefreshing(false);
       return;
     }
 
     setRefreshing(true);
     axios
-      .get("https://footballresults.azurewebsites.net/api/games?code=hhsSD7SmNHc0dKHWxqRed9x7skC0LPNo4SlFtSiquYzgAzFuIf_o0Q==", {
+      .get(API_ENDPOINTS.GAMES, {
         params: {
           teamId: team,
           divisionId: division
         }
       })
-      .then((response) => {
-        console.log("Games data received:", response.data);
+      .then((response) => {        
         setGameData(response.data);
         setbakGameData(response.data);
         setRefreshing(false);
       })
-      .catch((error) => {
-        console.log("Error fetching games:", error);
+      .catch((error) => {        
         setRefreshing(false);
       });
   };

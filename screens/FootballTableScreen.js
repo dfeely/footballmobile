@@ -8,6 +8,7 @@ import { ScrollView } from 'react-native-virtualized-view';
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import axios from 'axios';
 import { COLORS } from "../constants";
+import { API_ENDPOINTS } from '../constants/api';
 
 const FootballTableScreen = () => {
   const navigation = useNavigation();
@@ -18,25 +19,25 @@ const FootballTableScreen = () => {
 
   const getFootballData = async (divisionvalue) => {
     if (!divisionvalue) {
-      console.log("No division ID provided");
       setLoading(false);
       return;
     }
     setLoading(true);
     setError(null);
     
-    const url = `https://footballresults.azurewebsites.net/api/tables?code=H2kxllpl4c9hw5qwuMbdtL1I1TBd601_3ZmqZL4RLIfXAzFuA40x9Q==&divisionid=${divisionvalue}`;
-
     try {
-      const response = await axios.get(url);
+      const response = await axios.get(API_ENDPOINTS.TABLES, {
+      params: {
+        divisionid: divisionvalue
+      }
+    });
       console.log("Table data received:", response.data);
       
       setGameData({
         table: response.data
       });
       setLoading(false);
-    } catch (err) {
-      console.log("Error fetching table data:", err);
+    } catch (err) {    
       setError("Failed to load table data");
       setLoading(false);
     }
@@ -57,7 +58,6 @@ const FootballTableScreen = () => {
             setLoading(false);
           }
         } catch (error) {
-          console.log("Error loading division data:", error);
           setError("Failed to load division data");
           setLoading(false);
         }
