@@ -5,8 +5,7 @@ import {FlatList} from 'react-native';
 
 class ClubHeader extends Component  {
 	
-   render() {   
-	 //console.log(this.props.table);
+   render() {   	 
     return (		 
         <FlatList contentContainerStyle={{flexGrow: 1}}
           data={ this.props.table}					

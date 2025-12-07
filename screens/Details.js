@@ -6,8 +6,12 @@ import {  DateTitle, Scoreboard, CircleButton,  DetailsDesc, DetailsBid, Focused
 
 import { images } from '../assets/images';
 
-const DetailsHeader = ({ data, navigation }) => {
-  let team = data.home_team.replace(/ /g, '').replace('/', '').replace('u0027', '').toUpperCase();
+const DetailsHeader = ({ data, navigation }) => {  
+  let team = data.home_team
+  .replace(/ /g, '')
+  .replace('/', '')
+  .replace(/'/g, '') // Fix apostrophe handling
+  .toUpperCase();
   let logoHome = "";
   
   try {

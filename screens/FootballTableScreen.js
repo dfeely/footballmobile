@@ -30,8 +30,7 @@ const FootballTableScreen = () => {
       params: {
         divisionid: divisionvalue
       }
-    });
-      console.log("Table data received:", response.data);
+    }); 
       
       setGameData({
         table: response.data
@@ -53,8 +52,7 @@ const FootballTableScreen = () => {
             setDivisionid(value);
             global.DivisionId = value;
             await getFootballData(value);
-          } else {
-            console.log("No division ID found in storage");
+          } else {            
             setLoading(false);
           }
         } catch (error) {

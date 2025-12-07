@@ -54,7 +54,7 @@ const PickClub = ({ route, navigation }) => {
         }
         
       } catch (error) {
-        console.log('Error loading data:', error);
+        
       }
     };
     
@@ -160,8 +160,7 @@ const PickClub = ({ route, navigation }) => {
       // Get team and navigate
       await getTeam(division, clubName);
       
-    } catch (error) {
-      console.log('Error saving selection:', error);
+    } catch (error) {      
       alert('Error saving your selection');
     }
   };
