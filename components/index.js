@@ -11,7 +11,7 @@ import StatBody from "./StatBody"
 import Loading from "./Loading";
 import SimpleHeader from "./SimpleHeader";
 import MainContainer from "./MainContainer";
-import ClubHeader from "./ClubHeader";
+
 export {
   HomeHeader,
   SimpleHeader,
@@ -30,6 +30,6 @@ export {
   MainContainer,
   DateTitle,
   StatHeader,
-  StatBody,
-  ClubHeader
+  StatBody
+  
 };

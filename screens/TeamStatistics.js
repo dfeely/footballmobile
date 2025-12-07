@@ -2,7 +2,7 @@ import React,  {useEffect, useState} from "react";
 import {  useNavigation } from "@react-navigation/native";
 import { StyleSheet,View, Text, Image, StatusBar, FlatList, Linking } from "react-native";
 import { SafeAreaView } from 'react-native-safe-area-context'
-import { TableBody,TableHeader, ClubHeader, StatHeader, StatBody,CircleButton, HomeImage } from "../components";
+import { TableBody,TableHeader, StatHeader, StatBody,CircleButton, HomeImage } from "../components";
 import { COLORS, SIZES, assets, SHADOWS, FONTS } from "../constants";
 import styled from 'styled-components/native';
 import { ScrollView } from 'react-native-virtualized-view'
@@ -92,19 +92,14 @@ const StatsHeader = ({ data, navigation,teamid, teamname}) => {
 
 const TeamStatistics = ({ route, navigation }) => {
 
-  const { itemId , data , teamName , teamId , } = route.params;
- 
-  let itemId2 = itemId; 
-  let gameData = data;
-  let teamName2 = teamName
-  let teamId2= teamId ;    
-  
+  const { itemId , data , teamName , teamId , } = route.params; 
+  let gameData = data;  
 
   return (
  
     <SafeAreaView style={{ flex: 1 }}>
     <ScrollView  style={{ height: "100%" }} >
-       <StatsHeader  data={gameData} navigation={navigation} teamid={teamId2} teamname={teamName2} />
+       <StatsHeader  data={gameData} navigation={navigation} teamid={teamId} teamname={teamName} />
      
       
 		    <InfoText>Below are the Wins</InfoText>
