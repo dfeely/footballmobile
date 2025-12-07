@@ -14,7 +14,7 @@ class StatBody extends Component  {
         <FlatList contentContainerStyle={{flexGrow: 1}}  listKey="YourListName" //put here list name
           data={ this.props.table}					
           renderItem={({item}) => {
-						let team = item.TeamName.replace(/ /g, '').replace('/', '').replace('u0027','').replace('(H)','').replace('(A)','').toUpperCase();
+						let team = item.teamName.replace(/ /g, '').replace('/', '').replace('u0027','').replace('(H)','').replace('(A)','').toUpperCase();
 						let logo = ""
 						try
 						{
@@ -27,10 +27,10 @@ class StatBody extends Component  {
 						let home = "home";
 						return (
 							<StyledView style={{backgroundColor: '#fff', padding: 10, borderRadius: 5}}>
-								<TeamText>{item.DatePlayed}</TeamText>								 
+								<TeamText>{item.datePlayed}</TeamText>								 
 								<TeamLogo source={logo} /> 							 
-								<TeamText >{item.TeamName.replace('u0027','')}</TeamText>      						
-								<TeamText>{item.Score}</TeamText>    						
+								<TeamText >{item.teamName.replace('u0027','')}</TeamText>      						
+								<TeamText>{item.score}</TeamText>    						
 							  						
 							 						 
 							</StyledView>

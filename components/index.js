@@ -1,8 +1,7 @@
 import HomeHeader from "./HomeHeader";
 import GameCard from "./GameCard";
 import { RectButton, HomeImage, AwayImage, CircleButton } from "./Button";
-import { SubInfo, People, Scoreboard, EthPrice, NFTTitle, DateTitle } from "./SubInfo";
-import DetailsBid from "./DetailsBid";
+import { SubInfo, People, Scoreboard,  NFTTitle, DateTitle } from "./SubInfo";
 import FocusedStatusBar from "./FocusedStatusBar";
 import DetailsDesc from './DetailsDesc';
 import TableBody from "./TableBody";
@@ -18,13 +17,9 @@ export {
   SimpleHeader,
   GameCard,
   CircleButton,
-  SubInfo,
-  People,
   Scoreboard,
   RectButton,
-  EthPrice,
-  NFTTitle,
-  DetailsBid,
+  NFTTitle, 
   FocusedStatusBar,
   DetailsDesc,
   HomeImage,
@@ -32,7 +27,7 @@ export {
   TableBody,
   TableHeader,
   Loading,
-    MainContainer,
+  MainContainer,
   DateTitle,
   StatHeader,
   StatBody,

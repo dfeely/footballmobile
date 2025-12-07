@@ -11,8 +11,7 @@ class StatHeader extends Component {
 				<TeamText>Date Played</TeamText>
 				<TeamLogo/>
 				<TeamText>Team</TeamText>				
-				<TeamText>Score</TeamText>	
-			 			
+				<TeamText>Score</TeamText>				 			
 			</StyledView>
     );
   }

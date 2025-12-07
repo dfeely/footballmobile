@@ -2,7 +2,7 @@ import React from "react";
 import { View, Text, Image, FlatList, Linking } from "react-native";
 import { SafeAreaView } from 'react-native-safe-area-context'
 import {  SIZES, assets } from "../constants";
-import {  DateTitle, Scoreboard, CircleButton,  DetailsDesc, DetailsBid, FocusedStatusBar, HomeImage, AwayImage } from "../components";
+import {  DateTitle, Scoreboard, CircleButton,  DetailsDesc,  FocusedStatusBar, HomeImage, AwayImage } from "../components";
 
 import { images } from '../assets/images';
 

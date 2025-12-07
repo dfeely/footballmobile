@@ -1,10 +1,9 @@
 import React from "react";
 import { useNavigation } from "@react-navigation/native";
-import { View, Image, Text } from "react-native";
+import { View } from "react-native";
 import { images } from '../assets/images';
-
 import { COLORS, SIZES, SHADOWS, assets } from "../constants";
-import { SubInfo, EthPrice, NFTTitle, Scoreboard, DateTitle } from "./SubInfo";
+import {  NFTTitle, Scoreboard, DateTitle } from "./SubInfo";
 import { RectButton, HomeImage, AwayImage } from "./Button";
 
 const GameCard = ({ data }) => {

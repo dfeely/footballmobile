@@ -8,7 +8,6 @@ import { RectButton, CircleButton,HomeImage , AwayImage} from "./Button";
 
 const NFTCard = ({ data }) => {
   const navigation = useNavigation();
-
   return (
     <View
       style={{
@@ -24,10 +23,8 @@ const NFTCard = ({ data }) => {
           width: "100%",
           height: 150,
         }}
-      >
-       
-        <AwayImage imgUrl={assets.club01} right={10} top={10} />
-      
+      >       
+        <AwayImage imgUrl={assets.club01} right={10} top={10} />      
         <HomeImage imgUrl={assets.club02} left={10} top={10} />
         <HomeImage imgUrl={data.imageAway} left={40} top={40} />
         <View style={{position: "absolute", top: 0, left: 0, right: 0, bottom: 0, justifyContent: 'center', alignItems: 'center'}}>  
